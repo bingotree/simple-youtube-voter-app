@@ -42,12 +42,41 @@ module.exports = app;
 */
 
 const express = require('express');
-
 const app = express();
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+
+var urls = ['https://www.youtube.com/watch?v=ncmCP-mrZ5o','youtube.com/watch?v=9waAUbErluQ', 'https://www.youtube.com/watch?v=85BvT5X6WSo', 'https://www.youtube.com/watch?v=Y9r4G9o2upA', 
+            https://www.youtube.com/watch?v=AyU3D3_Y53Y'];
+
+function randomLinks(seed, hostname) {
+  var MersenneTwister = require('mersenne-twister');
+  var generator = new MersenneTwister(seed+10000);
+  var linkCount = urls.length;
+  var links = [];
+  for (var i = 0; i < linkCount; i++) {
+    links[i] = randomLink(seed + i * 10000, hostname);
+  }
+  return links;
+}
+
+function generateSeed(path) {
+  var md5 = require('md5');
+  var sum = md5(path);
+  var seed = parseInt(sum.slice(0,7),16) + parseInt(sum.slice(8,15),16) + parseInt(sum.slice(16,23),16) + parseInt(sum.slice(24,31),16);
+  return seed;
+}
+
+function randomVideo(req, res) {
+  var seed = generateSeed(req.hostname + req.path);
+  var links = randomLinks(seed, req.hostname);
+  return links[0];
+}
+
+
+
+
 app.get('/', (req, res) => {
-   res.render('index');
+   res.render('index', {video: randomVideo});
 });
