@@ -3,7 +3,6 @@ const app = express()
 const port = process.env.PORT || 3000
 
 });
-// res.render('random', {title: 'hiya', paragraphs: 'words', links: links});
 
 app.get('/', (req, res) => res.send('derp'))
 
