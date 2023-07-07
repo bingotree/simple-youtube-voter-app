@@ -1,6 +1,4 @@
 var createError = require('http-errors');
-
-var express = require('express');
 const express = require('express');
 
 var path = require('path');
@@ -82,5 +80,5 @@ function randomVideo(req, res) {
 
 
 app.get('/', (req, res) => {
-   res.render('index', {video: randomVideo});
+   res.render('index', {video: randomVideo()});
 });
