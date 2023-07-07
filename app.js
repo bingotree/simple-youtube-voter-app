@@ -11,7 +11,7 @@ var voteRouter = require('./routes/vote');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -46,7 +46,8 @@ const express = require('express');
 const app = express();
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
-  res.send('Successful response.');
+   res.render('index');
 });
