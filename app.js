@@ -1,4 +1,5 @@
 var createError = require('http-errors');
+/*
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -38,3 +39,14 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+*/
+
+const express = require('express');
+
+const app = express();
+
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+  res.send('Successful response.');
+});
