@@ -1,26 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
+var urls = ['https://www.youtube.com/watch?v=ncmCP-mrZ5o','youtube.com/watch?v=9waAUbErluQ', 'https://www.youtube.com/watch?v=85BvT5X6WSo', 'https://www.youtube.com/watch?v=Y9r4G9o2upA', 
+            https://www.youtube.com/watch?v=AyU3D3_Y53Y'];
+
 /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
 // });
 
-
-function randomLink(seed, hostname) {
-  var MersenneTwister = require('mersenne-twister');
-  var generator = new MersenneTwister(seed);
-  var link = [];
- // link['href'] = '/' + randomSentence(seed).replace(/ /g, '/').replace(/,/g, '');
-//  var linkSeed = generateSeed(hostname + link['href']);
- // link['title'] = randomTitle(linkSeed);
-  return link;
-}
-
 function randomLinks(seed, hostname) {
   var MersenneTwister = require('mersenne-twister');
   var generator = new MersenneTwister(seed+10000);
-  var linkCount = 5 + Math.floor(generator.random() * 10);
+  var linkCount = urls.length;
   var links = [];
   for (var i = 0; i < linkCount; i++) {
     links[i] = randomLink(seed + i * 10000, hostname);
@@ -35,13 +27,9 @@ function generateSeed(path) {
   return seed;
 }
 
-function randomPage(req, res) {
+function randomVideo(req, res) {
   var seed = generateSeed(req.hostname + req.path);
-
-  var title = randomTitle(seed);
-  var paragraphs = randomParagraphs(seed);
   var links = randomLinks(seed, req.hostname);
-
   res.render('random', {title: 'hiya', paragraphs: 'words', links: links});
 }
 
