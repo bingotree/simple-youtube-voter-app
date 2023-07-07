@@ -30,10 +30,15 @@ function generateSeed(path) {
 function randomVideo(req, res) {
   var seed = generateSeed(req.hostname + req.path);
   var links = randomLinks(seed, req.hostname);
-  res.render('random', {title: 'hiya', paragraphs: 'words', links: links});
+//  res.render('random', {title: 'hiya', paragraphs: 'words', links: links});
+
+
 }
 
-router.all('*', randomPage);
+//router.get('/', randomVideo);
+  router.get('/',function(req,res){
+  res.sendFile(path.join(__dirname+'/index.html'));
+});
 
 // console.log(lorem.generateParagraphs(7));
 
