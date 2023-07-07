@@ -1,16 +1,22 @@
 var createError = require('http-errors');
-/*
+
 var express = require('express');
+const express = require('express');
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+/*
 var indexRouter = require('./routes/index');
 var voteRouter = require('./routes/vote');
+*/
 
 var app = express();
 
+
 // view engine setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 
 app.use(logger('dev'));
@@ -19,9 +25,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*
 app.use('/', indexRouter);
 app.use('/vote', voteRouter);
 
+*/
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -39,13 +47,6 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-*/
-
-const express = require('express');
-const app = express();
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
 
 var urls = ['https://www.youtube.com/watch?v=ncmCP-mrZ5o',
             'https://www.youtube.com/watch?v=9waAUbErluQ',
