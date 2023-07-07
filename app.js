@@ -47,8 +47,11 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 
-var urls = ['https://www.youtube.com/watch?v=ncmCP-mrZ5o','youtube.com/watch?v=9waAUbErluQ', 'https://www.youtube.com/watch?v=85BvT5X6WSo', 'https://www.youtube.com/watch?v=Y9r4G9o2upA', 
-            https://www.youtube.com/watch?v=AyU3D3_Y53Y'];
+var urls = ['https://www.youtube.com/watch?v=ncmCP-mrZ5o',
+            'https://www.youtube.com/watch?v=9waAUbErluQ',
+            'https://www.youtube.com/watch?v=85BvT5X6WSo',
+            'https://www.youtube.com/watch?v=Y9r4G9o2upA', 
+            'https://www.youtube.com/watch?v=AyU3D3_Y53Y'];
 
 function randomLinks(seed, hostname) {
   var MersenneTwister = require('mersenne-twister');
