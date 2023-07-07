@@ -4,15 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vote</title>
+    <script language="javascript">
+function doIt() {}
+function vote(num) {
+}
+
+    </script>
   </head>
-  <body>
+  <body onload='doIt();'>
 
    <iframe width="560" height="315" src="<%= video %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-   <button>1</button>
-   <button>2</button>
-   <button>3</button>
-   <button>4</button>
-   <button>5</button>
+   <button onclick='vote(1);'>1</button>
+   <button onclick='vote(2);'>2</button>
+   <button onclick='vote(3);'>3</button>
+   <button onclick='vote(4);'>4</button>
+   <button onclick='vote(5);'>5</button>
   
   </body>
 </html>
