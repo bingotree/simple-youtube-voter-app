@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fileio= require('fs');
+var linereader = require('readline');
 /*
 var indexRouter = require('./routes/index');
 var voteRouter = require('./routes/vote');
@@ -42,13 +43,45 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 */
+var raw_results_file = "./raw_results.csv";
+var processed_results_file = "./results.csv";
 function saveAsCSV(id, vote) {
   var csv = Date.now() + ',' + id + ',' + vote + '\n';
   try {
-    fileio.appendFileSync("./results.csv", csv);
+    fileio.appendFileSync(raw_results_file, csv);
   } catch (err) {
     console.log(err);
   }
+}
+function processResults() {
+  fileio.writeFileSync(processed_results_file, 'id,vote1,vote2,etc...\n');
+  var fileStream = fileio.createReadStream(raw_results_file);
+  var rl = linereader.createInterface({
+      input: fileStream,
+      crlfDelay: Infinity
+  });
+  var results = {};
+  var firstLineFlag = true;
+  rl.on('line', (line) => {
+    if(firstLineFlag) { firstLineFlag = false; } else {
+      let parsed = line.split(',');
+      let parsed_id = parsed[1];
+      let parsed_vote = parsed[2];
+      if(results.hasOwnProperty(parsed_id)) {
+        results[parsed_id].push(parsed_vote);
+      } else {
+        results[parsed_id] = [parsed_vote];
+      }
+      console.log(results);
+    }
+  });
+  rl.on('close', () => {
+    for (let key in results) {
+      if (results.hasOwnProperty(key)) {
+        fileio.appendFileSync(processed_results_file, key + ',' + results[key].join(',')+'\n');
+      }
+    }
+  });
 }
 module.exports = app;
 
@@ -66,11 +99,19 @@ app.get('/', (req, res) => {
    var randomLink = getRandomLink();
    res.render('index', {video: randomLink, bd_debug: randomLink});
 });
+app.get('/raw_results', (req, res) => {
+  res.download(raw_results_file);
+});
+app.get('/process', (req, res) => {
+  processResults();
+  res.sendStatus(200);
+});
 app.get('/results', (req, res) => {
-  res.download('./results.csv');
+  processResults();
+  res.download(processed_results_file);
 });
 app.get('/clear', (req, res) => {
-  fileio.writeFileSync('./results.csv', 'timestamp,id,vote\n');
+  fileio.writeFileSync(raw_results_file, 'timestamp,id,vote\n');
   res.sendStatus(200);
 });
 app.put('/vote', (req, res) => {
