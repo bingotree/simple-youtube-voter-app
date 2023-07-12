@@ -71,6 +71,10 @@ app.get('/', (req, res) => {
 app.get('/results', (req, res) => {
   res.download('./results.csv');
 });
+app.get('/clear', (req, res) => {
+  fileio.writeFileSync('./results.csv', 'timestamp,id,vote\n');
+  res.sendStatus(200);
+});
 app.put('/vote', (req, res) => {
   console.log(req.query);
   saveAsCSV(req.query.id, req.query.vote);
