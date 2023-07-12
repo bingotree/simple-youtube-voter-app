@@ -4,6 +4,7 @@ const express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var fileio= require('fs');
 /*
 var indexRouter = require('./routes/index');
 var voteRouter = require('./routes/vote');
@@ -27,7 +28,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/vote', voteRouter);
 
-*/
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -43,42 +43,36 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
+*/
+function saveAsCSV(id, vote) {
+  var csv = Date.now() + ',' + id + ',' + vote + '\n';
+  try {
+    fileio.appendFileSync("./results.csv", csv);
+  } catch (err) {
+    console.log(err);
+  }
+}
 module.exports = app;
 
-var urls = ['https://www.youtube.com/watch?v=ncmCP-mrZ5o',
-            'https://www.youtube.com/watch?v=9waAUbErluQ',
-            'https://www.youtube.com/watch?v=85BvT5X6WSo',
-            'https://www.youtube.com/watch?v=Y9r4G9o2upA', 
-            'https://www.youtube.com/watch?v=AyU3D3_Y53Y'];
-
-function randomLinks(seed, hostname) {
-  var MersenneTwister = require('mersenne-twister');
-  var generator = new MersenneTwister(seed+10000);
-  var linkCount = urls.length;
-  var links = [];
-  for (var i = 0; i < linkCount; i++) {
-    links[i] = randomLink(seed + i * 10000, hostname);
-  }
-  return links;
+var urls = ['ncmCP-mrZ5o',
+            '9waAUbErluQ',
+            '85BvT5X6WSo',
+            'Y9r4G9o2upA', 
+            'AyU3D3_Y53Y'];
+var linkCount = urls.length;
+function getRandomLink() {
+  return urls[Math.floor(Math.random() * linkCount)]
 }
-
-function generateSeed(path) {
-  var md5 = require('md5');
-  var sum = md5(path);
-  var seed = parseInt(sum.slice(0,7),16) + parseInt(sum.slice(8,15),16) + parseInt(sum.slice(16,23),16) + parseInt(sum.slice(24,31),16);
-  return seed;
-}
-
-function randomVideo(req, res) {
-  var seed = generateSeed(req.hostname + req.path);
-  var links = randomLinks(seed, req.hostname);
-  return links[0];
-}
-
-
-
 
 app.get('/', (req, res) => {
-   res.render('index', {video: randomVideo()});
+   var randomLink = getRandomLink();
+   res.render('index', {video: randomLink, bd_debug: randomLink});
+});
+app.get('/results', (req, res) => {
+  res.download('./results.csv');
+});
+app.put('/vote', (req, res) => {
+  console.log(req.query);
+  saveAsCSV(req.query.id, req.query.vote);
+  res.sendStatus(200);
 });
