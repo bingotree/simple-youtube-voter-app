@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vote</title>
     <style type="text/css">
-body {
-  padding: 50px;
-  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
-  text-align: center;
-}
+    body {
+      padding: 20px;
+      font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+      text-align: center;
+    }
 
-a {
-  color: #00B7FF;
-  text-decoration: none;
-}
-#voting_buttons {
-  display: inline;
-}
-#voting_panel {
-  height: 100px;
-}
-#voted {
- color: #88DD88;
- font-size: 40px;
-}
+    a {
+      color: #00B7FF;
+      text-decoration: none;
+    }
+    #voting_buttons {
+      display: inline;
+    }
+    #voting_panel {
+      width: 100%;
+    }
+    #voted {
+     color: #88DD88;
+     font-size: 40px;
+    }
+    #youtube-player {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        padding-bottom: 10px;
+    }
 </style>
     <script type="text/javascript">
 function vote(num) {
@@ -61,7 +67,7 @@ document.getElementById('voted').style.display = 'block';
   </pre>
   </div>
 
-   <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= video %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+   <iframe width="560" height="315" id='youtube-player' src="https://www.youtube.com/embed/<%= video %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
    <div id='voting_panel'>
      <div id='voting_buttons' >
        <button onclick='vote(1);return false;'>1</button>
