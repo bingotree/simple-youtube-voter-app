@@ -6,10 +6,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fileio= require('fs');
 var linereader = require('readline');
-/*
-var indexRouter = require('./routes/index');
-var voteRouter = require('./routes/vote');
-*/
 
 var app = express();
 
@@ -53,35 +49,34 @@ function saveAsCSV(id, vote) {
     console.log(err);
   }
 }
-function processResults() {
-  fileio.writeFileSync(processed_results_file, 'id,vote1,vote2,etc...\n');
-  var fileStream = fileio.createReadStream(raw_results_file);
-  var rl = linereader.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity
-  });
+async function processResults(readable) {
   var results = {};
   var firstLineFlag = true;
-  rl.on('line', (line) => {
-    if(firstLineFlag) { firstLineFlag = false; } else {
-      let parsed = line.split(',');
-      let parsed_id = parsed[1];
-      let parsed_vote = parsed[2];
-      if(results.hasOwnProperty(parsed_id)) {
-        results[parsed_id].push(parsed_vote);
-      } else {
-        results[parsed_id] = [parsed_vote];
-      }
-      console.log(results);
-    }
-  });
-  rl.on('close', () => {
-    for (let key in results) {
-      if (results.hasOwnProperty(key)) {
-        fileio.appendFileSync(processed_results_file, key + ',' + results[key].join(',')+'\n');
+  for await (const chunk of readable) {
+    let lines = chunk.split('\n');
+    for(let i=0, max=lines.length; i<max; i++) {
+      let line = lines[i];
+      if(firstLineFlag || !line) { firstLineFlag = false; } else {
+        let parsed = line.split(',');
+        let parsed_id = parsed[1];
+        let parsed_vote = parsed[2];
+        if(results.hasOwnProperty(parsed_id)) {
+          results[parsed_id].push(parsed_vote);
+        } else {
+          results[parsed_id] = [parsed_vote];
+        }
       }
     }
-  });
+    writeResultsToFile(results);
+  }
+}
+function writeResultsToFile(results) {
+  fileio.writeFileSync(processed_results_file, 'id,vote1,vote2,etc...\n');
+  for (let key in results) {
+    if (results.hasOwnProperty(key)) {
+      fileio.appendFileSync(processed_results_file, key + ',' + results[key].join(',')+'\n');
+    }
+  }
 }
 module.exports = app;
 
@@ -94,6 +89,13 @@ var linkCount = urls.length;
 function getRandomLink() {
   return urls[Math.floor(Math.random() * linkCount)]
 }
+async function processAndDownload(res) {
+  const readable = fileio.createReadStream(
+    raw_results_file, {encoding: 'utf8'}
+  );
+  await processResults(readable);
+  res.download(processed_results_file);
+}
 
 app.get('/', (req, res) => {
    var randomLink = getRandomLink();
@@ -103,12 +105,11 @@ app.get('/raw_results', (req, res) => {
   res.download(raw_results_file);
 });
 app.get('/process', (req, res) => {
-  processResults();
+  processResults(res);
   res.sendStatus(200);
 });
 app.get('/results', (req, res) => {
-  processResults();
-  res.download(processed_results_file);
+  processAndDownload(res);
 });
 app.get('/clear', (req, res) => {
   fileio.writeFileSync(raw_results_file, 'timestamp,id,vote\n');
