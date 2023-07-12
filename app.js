@@ -21,24 +21,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// catch 404 and forward to error handler
-/*
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-*/
 var raw_results_file = "./raw_results.csv";
 var processed_results_file = "./results.csv";
 function saveAsCSV(id, vote) {
@@ -80,11 +62,59 @@ function writeResultsToFile(results) {
 }
 module.exports = app;
 
-var urls = ['ncmCP-mrZ5o',
-            '9waAUbErluQ',
-            '85BvT5X6WSo',
-            'Y9r4G9o2upA', 
-            'AyU3D3_Y53Y'];
+var urls = [
+'sGkh1W5cbH4',
+'6M4IRbGJxqA',
+'RpX7uAuDSbE',
+'-kmd-11U6EI',
+'Ba0VaEIEO6U',
+'YYJCpePYOFM',
+'kS2299GecDs',
+'ufqcHxp6f8w',
+'E77jmtut1Zc',
+'lidaZTgPTaw',
+'CZYyL9jmUU0',
+'Nep1qytq9JM',
+'prfZFyp4XZk',
+'G1hKzCkywM8',
+'T0K25IMYxl0',
+'Pbzn79TSRO0',
+'jgm58cbu0kw',
+'zqNTltOGh5c',
+'YfDqR4fqIWE',
+'fJ9rUzIMcZQ',
+'LdH1hSWGFGU',
+'sCtixpIWBto',
+'I3mHnxD3KRM',
+'-UYgORr5Qhg',
+'gXOIkT1-QWY',
+'03juO5oS2gg',
+'IBgU0tiLy2s',
+'9waAUbErluQ',
+'cotfJbTfrI0',
+'wEbqv2va4Vw',
+'Im3JzxlatUs',
+'hrMf6fjtzuM',
+'XIhEPwTMjWk',
+'bcvfu0QtchA',
+'xUS43Q6N1AI',
+'EvtMTV9mMSc',
+'qK4G2KpmqFU',
+'LYxTyMF9k_4',
+'y7qMqAgCqME',
+'nWfyw51DQfU',
+'Z7PlUGbsXlQ',
+'L3WXPd6_IuA',
+'iFQEsUjI0U8',
+'97hwNY3ni10',
+'CpB7-8SGlJ0',
+'Aat9O85ynsI',
+'13D1YY_BvWU',
+'sVdaFQhS86E',
+'CRj-sbi2i2I',
+'sizXBhgPbSY'
+];
+
 var linkCount = urls.length;
 function getRandomLink() {
   return urls[Math.floor(Math.random() * linkCount)]
