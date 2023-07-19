@@ -786,10 +786,12 @@ app.get('/process', (req, res) => {
 app.get('/results', (req, res) => {
   processAndDownload(res);
 });
+/*
 app.get('/clear', (req, res) => {
   fileio.writeFileSync(raw_results_file, 'timestamp,id,vote\n');
   res.sendStatus(200);
 });
+*/
 app.put('/vote', (req, res) => {
   console.log(req.query);
   saveAsCSV(req.query.id, req.query.vote);
