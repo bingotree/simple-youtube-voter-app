@@ -32,8 +32,8 @@ function saveAsCSV(id, vote) {
   }
 }
 async function processResults(readable) {
-  var results = {};
-  var firstLineFlag = true;
+  let results = {};
+  let firstLineFlag = true;
   for await (const chunk of readable) {
     let lines = chunk.split('\n');
     for(let i=0, max=lines.length; i<max; i++) {
@@ -769,6 +769,7 @@ async function processAndDownload(res) {
     raw_results_file, {encoding: 'utf8'}
   );
   await processResults(readable);
+  console.log('Stream is done reading.');
   res.download(processed_results_file);
 }
 
