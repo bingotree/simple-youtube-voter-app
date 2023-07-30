@@ -795,6 +795,6 @@ app.get('/clear', (req, res) => {
 */
 app.put('/vote', (req, res) => {
   console.log(req.query);
-  saveAsCSV(req.query.id, req.query.vote);
+//  saveAsCSV(req.query.id, req.query.vote);
   res.sendStatus(200);
 });
